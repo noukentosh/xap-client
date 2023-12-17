@@ -20,6 +20,7 @@
 #include "Features/Aimbot.hpp"
 #include "Features/Sense.hpp"
 #include "Features/Triggerbot.hpp"
+#include "Features/Recoil.hpp"
 
 #include "Overlay/Overlay.hpp"
 
@@ -46,6 +47,7 @@ std::vector<Player*>* Players = new std::vector<Player*>;
 Sense* ESP = new Sense(Players, GameCamera, Myself);
 Aimbot* AimAssist = new Aimbot(X11Display, Myself, Players);
 Triggerbot* Trigger = new Triggerbot(X11Display, Myself, Players);
+Recoil* RCS = new Recoil(X11Display, Myself, Players);
 
 // Booleans and Variables
 bool IsMenuOpened = true;
@@ -112,9 +114,6 @@ void LoadConfig() {
     AimAssist->MinDistance = Config::Aimbot::MinDistance;
     AimAssist->HipfireDistance = Config::Aimbot::HipfireDistance;
     AimAssist->ZoomDistance = Config::Aimbot::ZoomDistance;
-    AimAssist->RecoilEnabled = Config::Aimbot::RecoilControl;
-    AimAssist->PitchPower = Config::Aimbot::PitchPower;
-    AimAssist->YawPower = Config::Aimbot::YawPower;
 
     // ESP //
     ESP->GlowEnabled = Config::Sense::Enabled;
@@ -131,12 +130,18 @@ void LoadConfig() {
     Trigger->TriggerbotEnabled = Config::Triggerbot::Enabled;
     Trigger->TriggerbotRange = Config::Triggerbot::Range;
     Trigger->TriggerbotDelay = Config::Triggerbot::Delay;
+
+    // RCS //
+    RCS->RecoilEnabled = Config::Aimbot::RecoilControl;
+    RCS->PitchPower = Config::Aimbot::PitchPower;
+    RCS->YawPower = Config::Aimbot::YawPower;
 }
 
 void SaveConfig() {
     if (!AimAssist->Save()) std::cout << "something went wrong trying to save Aimbot settings" << std::endl;
     if (!ESP->Save()) std::cout << "something went wrong trying to save ESP settings" << std::endl;
     if (!Trigger->Save()) std::cout << "something went wrong trying to save Triggerbot settings" << std::endl;
+    if (!RCS->Save()) std::cout << "something went wrong trying to save RCS settings" << std::endl;
     UpdateConfig();
 }
 
@@ -179,6 +184,7 @@ void RenderUI() {
     if (ImGui::BeginTabBar("Menus"), ImGuiTabBarFlags_NoCloseWithMiddleMouseButton) {
         // Draw Settings //
         AimAssist->RenderUI();
+        RCS->RenderUI();
         Trigger->RenderUI();
         ESP->RenderUI();
 
@@ -213,6 +219,9 @@ bool UpdateCore() {
         if (!Myself->IsValid()) {
             return true;
         }
+        
+        Config::dpiX = static_cast<float>(OverlayWindow.getScreenWidth()) / Config::Sense::GameFOV;
+        Config::dpiY = static_cast<float>(OverlayWindow.getScreenHeight()) / Config::Sense::GameFOV;
 
         // Populate Players //
         Players->clear();
@@ -235,6 +244,7 @@ bool UpdateCore() {
         // Updates //
         GameCamera->Update();
         ESP->Update();
+        RCS->Update();
         AimAssist->Update();
         Trigger->Update();
 

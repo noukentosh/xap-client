@@ -107,6 +107,8 @@ public:
 
         OverlayWindow = glfwCreateWindow(ScreenWidth, ScreenHeight, RandomString(12).c_str(), NULL, NULL);
 
+        GrabScreenSize();
+
         CaptureInput(true);
         glfwMakeContextCurrent(OverlayWindow);
         
@@ -305,5 +307,13 @@ public:
     void GetScreenResolution(int& Width, int& Height) const {
         Width = ScreenWidth;
         Height = ScreenHeight;
+    }
+
+    int getScreenWidth () {
+        return ScreenWidth;
+    }
+
+    int getScreenHeight () {
+        return ScreenHeight;
     }
 };

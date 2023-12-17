@@ -40,17 +40,12 @@ struct Aimbot {
     float HipfireDistance = 60;
     float ZoomDistance = 160;
 
-    bool RecoilEnabled = true;
-    float PitchPower = 3;
-    float YawPower = 3;
-
     XDisplay* X11Display;
     LocalPlayer* Myself;
     std::vector<Player*>* Players;
 
     Player* CurrentTarget = nullptr;
     bool TargetSelected = true;
-    QAngle RCSLastPunch;
     std::chrono::milliseconds LastAimTime;
 
     Aimbot(XDisplay* X11Display, LocalPlayer* Myself, std::vector<Player*>* GamePlayers) {
@@ -64,20 +59,6 @@ struct Aimbot {
             ImGui::Checkbox("Aim - Assist", &AimbotEnabled);
             if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
                 ImGui::SetTooltip("Toggle the Aim-Assist");
-
-            ImGui::Separator();
-
-            if (ImGui::CollapsingHeader("Recoil Control", nullptr)) {
-                ImGui::Checkbox("Recoil Control", &RecoilEnabled);
-                if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                    ImGui::SetTooltip("Reduce the intensity of weapon's recoil.");
-                ImGui::SliderFloat("Pitch", &PitchPower, 1, 10, "%.1f");
-                if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                    ImGui::SetTooltip("Pitch Power");
-                ImGui::SliderFloat("Yaw", &YawPower, 1, 10, "%.1f");
-                if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                    ImGui::SetTooltip("Yaw Power");
-            }
 
             ImGui::Separator();
 
@@ -133,9 +114,6 @@ struct Aimbot {
             Config::Aimbot::MinDistance = MinDistance;
             Config::Aimbot::HipfireDistance = HipfireDistance;
             Config::Aimbot::ZoomDistance = ZoomDistance;
-            Config::Aimbot::RecoilControl = RecoilEnabled;
-            Config::Aimbot::PitchPower = PitchPower;
-            Config::Aimbot::YawPower = YawPower;
             return true;
         } catch (...) {
             return false;
@@ -194,12 +172,9 @@ struct Aimbot {
             return;
         }
 
-        if(std::abs(Delta.x) < 0.04 && std::abs(Delta.y) < 0.04) {
+        if(std::abs(Delta.x) < 0.05 && std::abs(Delta.y) < 0.05) {
             return;
         }
-
-        // Recoil Control
-        RecoilControl(DesiredAngles);
 
         // Smoothing
         SmoothAngle(DesiredAngles);
@@ -337,16 +312,6 @@ struct Aimbot {
             }
         }
         return 1.0;
-    }
-
-    void RecoilControl(QAngle& Angle) {
-        QAngle CurrentPunch = QAngle(Myself->PunchAngles.x, Myself->PunchAngles.y).NormalizeAngles();
-        QAngle NewPunch = { CurrentPunch.x - RCSLastPunch.x, CurrentPunch.y - RCSLastPunch.y };
-
-		Angle.x -= NewPunch.x * YawPower;
-		Angle.y -= NewPunch.y * PitchPower;
-
-        RCSLastPunch = CurrentPunch;
     }
 
     int GetBestBone(Player* Target) {

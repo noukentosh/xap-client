@@ -21,6 +21,9 @@ constexpr char ConfigFile[] = "config.ini";
     Config::section::key = reader.GetInteger(#section, #key, Config::section::key);
 
 namespace Config {
+    float dpiX = 0;
+    float dpiY = 0;
+
     namespace Aimbot {
         bool Enabled = true;
         bool PredictMovement = true;
