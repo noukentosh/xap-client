@@ -185,6 +185,15 @@ struct Aimbot {
         if (!GetAngle(CurrentTarget, DesiredAngles))
             return;
 
+        QAngle ViewAngles = QAngle(Myself->ViewAngles.x, Myself->ViewAngles.y).NormalizeAngles();
+        QAngle Delta = DesiredAngles - ViewAngles;
+        Delta.NormalizeAngles();
+
+        if(Delta.Magnitude() > FOV) {
+            ReleaseTarget();
+            return;
+        }
+
         // Recoil Control
         RecoilControl(DesiredAngles);
 

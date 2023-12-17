@@ -125,4 +125,8 @@ struct QAngle {
     inline static QAngle zero() {
         return QAngle(0, 0);
     }
+
+    float Magnitude() const {
+        return std::sqrt(x * x + y * y);
+    }
 };

@@ -74,6 +74,10 @@ struct Vector2D {
         return Vector2D(clampedX, clampedY);
     }
 
+    float Length () const {
+        return Magnitude();
+    }
+
     bool IsZeroVector() {
         return x == 0 && y == 0;
     }
