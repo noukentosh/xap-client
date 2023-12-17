@@ -283,7 +283,7 @@ struct Sense {
         // Item Glow //
         if (ItemGlow) {
             for (int highlightId = 26; highlightId < 44; highlightId++) {
-                const GlowMode newGlowMode = { 137, 138, 35, 127 };
+                const GlowMode newGlowMode = { 137, 138, 128, 127 };
                 SetGlowState(HighlightSettingsPointer, HighlightSize, highlightId, newGlowMode);
             }
         } else {
@@ -295,19 +295,19 @@ struct Sense {
 
         // Player Glow //
         // -> Visible
-        const GlowMode VisibleMode = { 2, 6, 32, 127 };
+        const GlowMode VisibleMode = { 12, 101, 90, 83 };
         const Color VisibleColor = { 0.6, 3, 2.04 };
         SetGlowState(HighlightSettingsPointer, HighlightSize, 0, VisibleMode);
         SetColorState(HighlightSettingsPointer, HighlightSize, 0, VisibleColor);
 
         // -> Invisible
-        const GlowMode InvisibleMode = { 2, 6, 32, 100 };
+        const GlowMode InvisibleMode = { 12, 101, 90, 83 };
         const Color InvisibleColor = { 4.5, 0.6, 0.6 };
         SetGlowState(HighlightSettingsPointer, HighlightSize, 1, InvisibleMode);
         SetColorState(HighlightSettingsPointer, HighlightSize, 1, InvisibleColor);
 
         // -> Knocked
-        const GlowMode KnockedMode = { 2, 6, 32, 127 };
+        const GlowMode KnockedMode = { 12, 101, 90, 83 };
         const Color KnockedColor = { 1, 1, 0.35 };
         SetGlowState(HighlightSettingsPointer, HighlightSize, 90, KnockedMode);
         SetColorState(HighlightSettingsPointer, HighlightSize, 90, KnockedColor);
@@ -319,7 +319,7 @@ struct Sense {
         SetColorState(HighlightSettingsPointer, HighlightSize, 91, DisabledColor);
 
         // -> Locked On
-        const GlowMode LockedOnMode = { 136, 6, 32, 127 };
+        const GlowMode LockedOnMode = { 12, 101, 90, 83 };
         const Color LockedOnColor = { 0, 0.75, 0.75 };
         SetGlowState(HighlightSettingsPointer, HighlightSize, 92, LockedOnMode);
         SetColorState(HighlightSettingsPointer, HighlightSize, 92, LockedOnColor);
@@ -331,10 +331,10 @@ struct Sense {
             if (IgnoreTeam ? !Target->IsHostile : false) continue;
 
             if (GlowEnabled) {
-                if (Target->IsLockedOn) {
+                /*if (Target->IsLockedOn) {
                     SetGlow(Target, 1, 2, 92);
                     continue;
-                }
+                }*/
 
                 if (Target->DistanceToLocalPlayer < Conversion::ToGameUnits(GlowMaxDistance)) {
                     if (Target->IsKnocked) {
