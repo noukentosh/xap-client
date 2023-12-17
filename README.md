@@ -48,6 +48,6 @@ unknowncheats: basic knowledge and offsets
     cd build
     cmake ..
     make
-    sudo ./xapclient
+    sudo ./ntapx
     
 **5. Press Insert to toggle the Menu (You can only interact with the Menu and the game when the menu is active).**

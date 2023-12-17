@@ -188,6 +188,7 @@ void RenderUI() {
             ImGui::TextColored(ImVec4(0.3, 1, 0.64, 1), "Koelion: ImGui Menu, AimbotResolver");
             ImGui::TextColored(ImVec4(0.3, 0.6, 0.9, 1), "unknowncheats: Offsets and ton of other things");
             ImGui::TextColored(ImVec4(0.6, 1, 0.64, 1), "Made by Azreol/Nexilist");
+            ImGui::TextColored(ImVec4(1, 0, 0.64, 1), "Edited by NoukenTosh");
             ImGui::EndTabItem();
         }
 

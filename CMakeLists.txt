@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(xapclient VERSION 1.1.8)
+project(ntapx VERSION 1.1.8)
 
 # Set C++ standard to C++23
 set(CMAKE_CXX_STANDARD 23)
@@ -28,10 +28,10 @@ find_package (X11 REQUIRED)
 link_directories(/usr/local/lib)
 
 # Add the executable target
-add_executable(xapclient xap.cpp)
+add_executable(ntapx xap.cpp)
 
 # Link the executable against the ImGui library, GLFW/OpenGL libraries and X11 libraries
-target_link_libraries(xapclient
+target_link_libraries(ntapx
   imgui
   glfw3
   GL
@@ -44,7 +44,7 @@ target_link_libraries(xapclient
 )
 
 # Set the include directories for the executable
-target_include_directories(xapclient PUBLIC
+target_include_directories(ntapx PUBLIC
   /usr/local/include
   ${CMAKE_CURRENT_SOURCE_DIR}/Utils
   ${CMAKE_CURRENT_SOURCE_DIR}/Core
