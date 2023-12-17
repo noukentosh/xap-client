@@ -194,6 +194,10 @@ struct Aimbot {
             return;
         }
 
+        if(std::abs(Delta.x) < 0.04 && std::abs(Delta.y) < 0.04) {
+            return;
+        }
+
         // Recoil Control
         RecoilControl(DesiredAngles);
 
@@ -202,11 +206,13 @@ struct Aimbot {
 
         // Aim angles
         Vector2D aimbotDelta = Vector2D(CalculatePitchIncrement(DesiredAngles), CalculateYawIncrement(DesiredAngles)).Multiply(Speed);
+
         int totalYawIncrementInt = RoundHalfEven(AL1AF0(aimbotDelta.x));
         int totalPitchIncrementInt = RoundHalfEven(AL1AF0(aimbotDelta.y * -1));
 
         // Move Mouse
         if (totalPitchIncrementInt == 0 && totalYawIncrementInt == 0) return;
+        
         X11Display->MoveMouse(totalYawIncrementInt, totalPitchIncrementInt);
     }
 
