@@ -20,6 +20,7 @@
 struct Triggerbot {
     bool TriggerbotEnabled = true;
     float TriggerbotRange = 200;
+    float TriggerbotDelay = 100;
 
     std::set<int> WeaponList = { 1, 84, 95, 86, 102, 94, 104, 88, 110, 106, 108, 91 };
 
@@ -41,6 +42,9 @@ struct Triggerbot {
             ImGui::SliderFloat("Triggerbot Range", &TriggerbotRange, 0, 1000, "%.0f");
             if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
                 ImGui::SetTooltip("Triggerbot's activation range.");
+            ImGui::SliderFloat("Triggerbot Delay", &TriggerbotDelay, 0, 1000, "%.0f");
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                ImGui::SetTooltip("Triggerbot's activation delay.");
             ImGui::EndTabItem();
         }
     }
@@ -49,6 +53,7 @@ struct Triggerbot {
         try {
             Config::Triggerbot::Enabled = TriggerbotEnabled;
             Config::Triggerbot::Range = TriggerbotRange;
+            Config::Triggerbot::Delay = TriggerbotDelay;
             return true;
         } catch (...) {
             return false;
@@ -59,8 +64,6 @@ struct Triggerbot {
         if (!TriggerbotEnabled) return;
         if (!Myself->IsCombatReady()) return;
 
-        printf("%d\n", Myself->WeaponIndex);
-
         if (WeaponList.find(Myself->WeaponIndex) == WeaponList.end()) return;
 
         for (int i = 0; i < Players->size(); i++) {
@@ -68,6 +71,7 @@ struct Triggerbot {
             if (!player->IsCombatReady()) continue;
             if (!player->IsHostile) continue;
             if (!player->IsAimedAt) continue;
+            if (!player->isAimedAtDelay(Myself->WorldTime, TriggerbotDelay / 1000.f)) continue;
             if (player->DistanceToLocalPlayer < Conversion::ToGameUnits(TriggerbotRange) && X11Display->KeyDown(XK_Shift_L)) {
                 X11Display->MouseClickLeft();
                 break;

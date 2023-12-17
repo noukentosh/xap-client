@@ -32,12 +32,13 @@ struct Player {
     int Shield;
     int MaxShield;
 
-    int LastTimeAimedAt;
-    int LastTimeAimedAtPrevious;
+    float LastTimeAimedAt;
+    float LastTimeAimedAtPrevious;
     bool IsAimedAt;
+    float StartAimed;
 
-    int LastVisibleTime;
-    int LastTimeVisiblePrevious;
+    float LastVisibleTime;
+    float LastTimeVisiblePrevious;
     bool IsVisible;
 
     bool IsLocal;
@@ -74,11 +75,16 @@ struct Player {
         GlowThroughWall = Memory::Read<int>(BasePointer + OFF_GLOW_THROUGH_WALL);
         HighlightID = Memory::Read<int>(BasePointer + OFF_GLOW_HIGHLIGHT_ID + 1);
 
-        LastTimeAimedAt = Memory::Read<int>(BasePointer + OFF_LAST_AIMEDAT_TIME);
-        IsAimedAt = LastTimeAimedAtPrevious < LastTimeAimedAt;
+        LastTimeAimedAt = Memory::Read<float>(BasePointer + OFF_LAST_AIMEDAT_TIME);
+        if(!IsAimedAt) {
+            IsAimedAt = LastTimeAimedAtPrevious < LastTimeAimedAt;
+            StartAimed = LastTimeAimedAt;
+        } else {
+            IsAimedAt = LastTimeAimedAtPrevious < LastTimeAimedAt;
+        }
         LastTimeAimedAtPrevious = LastTimeAimedAt;
 
-        LastVisibleTime = Memory::Read<int>(BasePointer + OFF_LAST_VISIBLE_TIME);
+        LastVisibleTime = Memory::Read<float>(BasePointer + OFF_LAST_VISIBLE_TIME);
         IsVisible = IsDummy() || IsAimedAt || LastTimeVisiblePrevious < LastVisibleTime;
         LastTimeVisiblePrevious = LastVisibleTime;
 
@@ -174,5 +180,9 @@ struct Player {
 
         BonePosition += LocalOrigin;
         return BonePosition;
+    }
+
+    bool isAimedAtDelay (float WorldTime, float delayMs) {
+        return (WorldTime - StartAimed) >= delayMs;
     }
 };

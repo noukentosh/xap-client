@@ -130,6 +130,7 @@ void LoadConfig() {
     // Triggerbot //
     Trigger->TriggerbotEnabled = Config::Triggerbot::Enabled;
     Trigger->TriggerbotRange = Config::Triggerbot::Range;
+    Trigger->TriggerbotDelay = Config::Triggerbot::Delay;
 }
 
 void SaveConfig() {

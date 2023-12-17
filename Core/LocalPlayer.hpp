@@ -29,6 +29,8 @@ struct LocalPlayer {
 
     float ViewYaw;
 
+    float WorldTime;
+
     void ResetPointer() {
         BasePointer = 0;
     }
@@ -49,6 +51,8 @@ struct LocalPlayer {
         PunchAngles = Memory::Read<Vector2D>(BasePointer + OFF_PUNCH_ANGLES);
 
         ViewYaw = Memory::Read<float>(BasePointer + OFF_YAW);
+
+        WorldTime = Memory::Read<float>(BasePointer + OFF_WORLD_TIME);
 
         if (!IsDead && !IsKnocked) {
             long WeaponHandle = Memory::Read<long>(BasePointer + OFF_WEAPON_HANDLE);

@@ -52,6 +52,7 @@ namespace Config {
     namespace Triggerbot {
         bool Enabled = true;
         float Range = 200;
+        float Delay = 100;
     };
 };
 
@@ -89,6 +90,7 @@ void UpdateConfig() {
         WriteSection(Triggerbot);
         WritePair(Triggerbot, Enabled);
         WritePair(Triggerbot, Range);
+        WritePair(Triggerbot, Delay);
         WriteSectionEnd();
         conf.close();
     }
@@ -124,6 +126,7 @@ bool ReadConfig(const std::string &configFile) {
 
     ReadBool(Triggerbot, Enabled);
     ReadFloat(Triggerbot, Range);
+    ReadFloat(Triggerbot, Delay);
 
     ReadBool(Aimbot, RecoilControl);
     ReadFloat(Aimbot, PitchPower);
