@@ -43,6 +43,9 @@ struct Sense {
     
     bool AimedAtOnly = false;
 
+    bool IgnoreTeam = true;
+    bool OnlyVisibleSeer = true;
+
     float SeerMaxDistance = 200;
     float GameFOV = 120;
 
@@ -76,6 +79,8 @@ struct Sense {
             if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
                 ImGui::SetTooltip("Only those in range will glow");
 
+            ImGui::Checkbox("IgnoreTeam", &IgnoreTeam);
+
             ImGui::Separator();
 
             // Drawings
@@ -96,6 +101,7 @@ struct Sense {
             ImGui::SliderFloat("Draw Distance", &SeerMaxDistance, 0, 1000, "%.0f");
             if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
                 ImGui::SetTooltip("Only draw those in range.");
+            ImGui::Checkbox("Only visible SeerBar", &OnlyVisibleSeer);
 
             ImGui::Separator();
 
@@ -206,10 +212,10 @@ struct Sense {
         // Draw lot of things
         for (int i = 0; i < Players->size(); i++) {
             Player* p = Players->at(i);
-            if (!p->IsCombatReady() || !p->IsVisible || !p->IsHostile || p->DistanceToLocalPlayer > (Conversion::ToGameUnits(SeerMaxDistance)) || Myself->BasePointer == p->BasePointer) continue;
+            if (!p->IsCombatReady() || (IgnoreTeam ? !p->IsHostile : false) || p->DistanceToLocalPlayer > (Conversion::ToGameUnits(SeerMaxDistance)) || Myself->BasePointer == p->BasePointer) continue;
 
             // Tracer
-            if (DrawTracers) {
+            if (DrawTracers && p->IsVisible) {
                 Vector2D chestScreenPosition;
                 GameCamera->WorldToScreen(p->GetBonePosition(HitboxType::UpperChest), chestScreenPosition);
                 if (!chestScreenPosition.IsZeroVector()) {
@@ -220,7 +226,7 @@ struct Sense {
             }
 
             // Distance
-            if (DrawDistance) {
+            if (DrawDistance && p->IsVisible) {
                 Vector2D originScreenPosition;
                 GameCamera->WorldToScreen(p->LocalOrigin.Add(Vector3D(0, 15, 0)), originScreenPosition);
                 if (!originScreenPosition.IsZeroVector()) {
@@ -229,7 +235,7 @@ struct Sense {
             }
 
             // Seer
-            if (DrawSeer && !AimedAtOnly && !Myself->IsZooming) {
+            if (DrawSeer && !AimedAtOnly && !Myself->IsZooming && (OnlyVisibleSeer ? p->IsVisible : true)) {
                 Vector2D headScreenPosition;
                 GameCamera->WorldToScreen(p->GetBonePosition(HitboxType::Head), headScreenPosition);
                 if (!headScreenPosition.IsZeroVector())
@@ -276,12 +282,12 @@ struct Sense {
 
         // Item Glow //
         if (ItemGlow) {
-            for (int highlightId = 31; highlightId < 35; highlightId++) {
+            for (int highlightId = 26; highlightId < 44; highlightId++) {
                 const GlowMode newGlowMode = { 137, 138, 35, 127 };
                 SetGlowState(HighlightSettingsPointer, HighlightSize, highlightId, newGlowMode);
             }
         } else {
-            for (int highlightId = 31; highlightId < 35; highlightId++) {
+            for (int highlightId = 26; highlightId < 44; highlightId++) {
                 const GlowMode newGlowMode = StoredGlowMode->at(highlightId);
                 SetGlowState(HighlightSettingsPointer, HighlightSize, highlightId, newGlowMode);
             }
@@ -322,7 +328,7 @@ struct Sense {
         for (int i = 0; i < Players->size(); i++) {
             Player* Target = Players->at(i);
             if (!Target->IsValid()) continue;
-            if (!Target->IsHostile) continue;
+            if (IgnoreTeam ? !Target->IsHostile : false) continue;
 
             if (GlowEnabled) {
                 if (Target->IsLockedOn) {
