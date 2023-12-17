@@ -238,7 +238,7 @@ struct Sense {
         }
 
         // Draw Seer on locked target
-        if (AimAssistState->TargetSelected && AimAssistState->CurrentTarget) {
+        /*if (AimAssistState->TargetSelected && AimAssistState->CurrentTarget) {
             Vector2D headScreenPosition;
             GameCamera->WorldToScreen(AimAssistState->CurrentTarget->GetBonePosition(HitboxType::Head), headScreenPosition);
             if (headScreenPosition.IsZeroVector())
@@ -246,7 +246,7 @@ struct Sense {
 
             Renderer::DrawSeer(Canvas, headScreenPosition.x, headScreenPosition.y - 20, AimAssistState->CurrentTarget->Shield, AimAssistState->CurrentTarget->MaxShield, AimAssistState->CurrentTarget->Health);
             return;
-        }
+        }*/
     }
 
     void SetGlowState(long HighlightSettingsPointer, long HighlightSize, int HighlightID, GlowMode NewGlowMode) {
