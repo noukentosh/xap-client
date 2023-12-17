@@ -316,15 +316,15 @@ struct Aimbot {
 
     int GetBestBone(Player* Target) {
         float NearestDistance = 999;
-        int NearestBone = 2;
-        for (int i = 0; i < 6; i++) {
+        int NearestBone = 1;
+        /*for (int i = 0; i < 6; i++) {
             HitboxType Bone = static_cast<HitboxType>(i);
             double DistanceFromCrosshair = CalculateDistanceFromCrosshair(Target->GetBonePosition(Bone));
             if (DistanceFromCrosshair < NearestDistance) {
                 NearestBone = i;
                 NearestDistance = DistanceFromCrosshair;
             }
-        }
+        }*/
         return NearestBone;
     }
 
