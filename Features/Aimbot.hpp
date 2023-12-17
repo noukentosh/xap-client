@@ -29,6 +29,7 @@ struct Aimbot {
 
     bool PredictMovement = true;
     bool PredictBulletDrop = true;
+    bool IgnoreTeam = true;
 
     float FinalDistance = 0;
 
@@ -97,6 +98,12 @@ struct Aimbot {
             ImGui::SliderFloat("Zoom Distance", &ZoomDistance, 1, 500, "%.0f");
             if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
                 ImGui::SetTooltip("Maximum distance for Aim-Assist to work");
+
+            ImGui::Separator();
+
+            ImGui::Checkbox("IgnoreTeam", &IgnoreTeam);
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                ImGui::SetTooltip("If disabled then aim team members");
 
             ImGui::EndTabItem();
         }
@@ -243,7 +250,7 @@ struct Aimbot {
             !target->IsValid() || 
             !target->IsCombatReady() || 
             !target->IsVisible || 
-            !target->IsHostile || 
+            (IgnoreTeam ? !target->IsHostile : false) || 
             target->Distance2DToLocalPlayer < Conversion::ToGameUnits(MinDistance) || 
             target->Distance2DToLocalPlayer > Conversion::ToGameUnits(FinalDistance))
             return false;
