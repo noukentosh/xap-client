@@ -229,7 +229,7 @@ struct Sense {
             }
 
             // Seer
-            if (DrawSeer && !AimedAtOnly) {
+            if (DrawSeer && !AimedAtOnly && !Myself->IsZooming) {
                 Vector2D headScreenPosition;
                 GameCamera->WorldToScreen(p->GetBonePosition(HitboxType::Head), headScreenPosition);
                 if (!headScreenPosition.IsZeroVector())
