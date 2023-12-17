@@ -69,7 +69,7 @@ struct Recoil {
     }
 
     void Update() {
-        if(Myself->IsInAttack) {
+        if(RecoilEnabled && Myself->IsInAttack) {
             StartAiming();
         } else {
             RCSLastPunch = QAngle(0, 0);
